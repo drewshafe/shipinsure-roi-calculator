@@ -414,7 +414,7 @@
 
                 <div class="input-group">
                     <label>6. Protection Premium %</label>
-                    <input type="text" id="protectionPremium" value="5.00" placeholder="ex: 3.25%" inputmode="decimal">
+                    <input type="text" id="protectionPremium" value="3.00" placeholder="ex: 3.25%" inputmode="decimal">
                 </div>
 
                 <div class="input-group">
@@ -619,7 +619,6 @@
             document.getElementById('avgPremium').textContent = formatCurrency(avgPremium);
             document.getElementById('totalClaims').textContent = formatNumber(totalClaims);
             document.getElementById('protectedClaims').textContent = formatNumber(claimsOffset);
-            document.getElementById('premiumPool').textContent = formatCurrency(premiumPool);
             document.getElementById('postClaimBalance').textContent = formatCurrency(postClaimBalance);
 
             document.getElementById('costPerReship').textContent = formatCurrency(costPerReship);
@@ -647,7 +646,7 @@
                 document.getElementById('csCostPerClaim').value = urlParams.get('cs') || '';
                 document.getElementById('revenueShare').value = urlParams.get('share') || '30';
                 document.getElementById('attachRate').value = urlParams.get('attach') || '60';
-                document.getElementById('protectionPremium').value = urlParams.get('premium') || '5.00';
+                document.getElementById('protectionPremium').value = urlParams.get('premium') || '3.00';
                 document.getElementById('timeframe').value = urlParams.get('view') || 'monthly';
                 
                 // Load merchant logo from URL if present
@@ -665,7 +664,7 @@
                     csCostPerClaim: localStorage.getItem('shipinsure_csCostPerClaim'),
                     revenueShare: localStorage.getItem('shipinsure_revenueShare') || '30',
                     attachRate: localStorage.getItem('shipinsure_attachRate') || '60',
-                    protectionPremium: localStorage.getItem('shipinsure_protectionPremium') || '5.00',
+                    protectionPremium: localStorage.getItem('shipinsure_protectionPremium') || '3.00',
                     timeframe: localStorage.getItem('shipinsure_timeframe') || 'monthly',
                     merchantLogo: localStorage.getItem('shipinsure_merchantLogo')
                 };
@@ -702,7 +701,7 @@
                 cs: removeCommas(document.getElementById('csCostPerClaim').value) || '',
                 share: removeCommas(document.getElementById('revenueShare').value) || '30',
                 attach: removeCommas(document.getElementById('attachRate').value) || '60',
-                premium: removeCommas(document.getElementById('protectionPremium').value) || '5.00',
+                premium: removeCommas(document.getElementById('protectionPremium').value) || '3.00',
                 view: document.getElementById('timeframe').value || 'monthly'
             });
             
@@ -735,39 +734,6 @@
         }
 
         // Download calculator as standalone HTML file
-        function downloadCalculator() {
-            // Get current HTML
-            const html = document.documentElement.outerHTML;
-            
-            // Create blob
-            const blob = new Blob([html], { type: 'text/html' });
-            
-            // Create download link
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            
-            // Get merchant name from logo or use default
-            const merchantName = document.getElementById('logoDisplay').querySelector('img') ? 'merchant' : 'blank';
-            a.download = `shipinsure-roi-calculator-${merchantName}.html`;
-            
-            // Trigger download
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            // Show success message
-            const downloadBtn = document.getElementById('downloadCalculator');
-            const originalText = downloadBtn.textContent;
-            downloadBtn.textContent = '✓ Downloaded!';
-            downloadBtn.style.background = '#218838';
-            
-            setTimeout(() => {
-                downloadBtn.textContent = originalText;
-                downloadBtn.style.background = '#28a745';
-            }, 2000);
-        }
 
         // Add event listeners to all inputs
         const inputs = document.querySelectorAll('input[type="text"]');
@@ -795,9 +761,6 @@
 
         // Add event listener to generate link button
         document.getElementById('generateLink').addEventListener('click', generateShareableLink);
-
-        // Add event listener to download button
-        document.getElementById('downloadCalculator').addEventListener('click', downloadCalculator);
 
         // Add event listener to copy link button
         document.getElementById('copyLink').addEventListener('click', copyToClipboard);
