@@ -652,10 +652,11 @@
                 document.getElementById('protectionPremium').value = urlParams.get('premium') || '3.00';
                 document.getElementById('timeframe').value = urlParams.get('view') || 'monthly';
                 
-                // Load merchant logo from URL if present
-                if (urlParams.get('logo')) {
+                // Load merchant logo from localStorage (not from URL)
+                const savedLogo = localStorage.getItem('shipinsure_merchantLogo');
+                if (savedLogo) {
                     const logoDisplay = document.getElementById('logoDisplay');
-                    logoDisplay.innerHTML = `<img src="${decodeURIComponent(urlParams.get('logo'))}" alt="Merchant Logo">`;
+                    logoDisplay.innerHTML = `<img src="${savedLogo}" alt="Merchant Logo">`;
                 }
             } else {
                 // Load from localStorage if no URL params
@@ -694,7 +695,6 @@
         // Generate shareable link with current values
         function generateShareableLink() {
             const baseUrl = 'https://drewshafe.github.io/shipinsure-roi-calculator';
-            const merchantLogo = localStorage.getItem('shipinsure_merchantLogo') || '';
             
             const params = new URLSearchParams({
                 orders: removeCommas(document.getElementById('annualOrders').value) || '',
@@ -707,10 +707,6 @@
                 premium: removeCommas(document.getElementById('protectionPremium').value) || '3.00',
                 view: document.getElementById('timeframe').value || 'monthly'
             });
-            
-            if (merchantLogo) {
-                params.append('logo', encodeURIComponent(merchantLogo));
-            }
             
             const shareableUrl = `${baseUrl}?${params.toString()}`;
             document.getElementById('shareableLink').value = shareableUrl;
