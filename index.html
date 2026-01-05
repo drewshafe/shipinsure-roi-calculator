@@ -40,68 +40,6 @@
             gap: 30px;
         }
 
-        .merchant-logo-section {
-            flex: 0 0 280px;
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .merchant-logo-display {
-            width: 100%;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 5px;
-        }
-
-        .merchant-logo-display img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .merchant-logo-placeholder {
-            color: #999;
-            font-size: 0.85em;
-            text-align: center;
-        }
-
-        .upload-btn-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .upload-btn {
-            background: #5b6dd1;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-
-        .upload-btn-wrapper input[type=file] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
 
         .header-center {
             flex: 1;
@@ -171,14 +109,10 @@
                 padding: 20px;
             }
             
-            .merchant-logo-section,
             .header-controls {
                 flex: none;
                 width: 100%;
                 max-width: 400px;
-            }
-
-            .header-controls {
                 align-items: center;
             }
         }
@@ -343,16 +277,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="merchant-logo-section">
-                <div class="merchant-logo-display" id="logoDisplay">
-                    <span class="merchant-logo-placeholder">☁️ Upload Merchant Logo</span>
-                </div>
-                <div class="upload-btn-wrapper">
-                    <button class="upload-btn">Choose Logo</button>
-                    <input type="file" id="logoUpload" accept="image/*" />
-                </div>
-            </div>
-
             <div class="header-center">
                 <div class="shipinsure-logo">
                     <img src="si2026.png" alt="ShipInsure" style="height: 45px; width: auto;">
@@ -517,25 +441,6 @@
         }
 
         // Handle logo upload
-        function handleLogoUpload(event) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const logoDisplay = document.getElementById('logoDisplay');
-                    logoDisplay.innerHTML = `<img src="${e.target.result}" alt="Merchant Logo">`;
-                    
-                    // Save logo to localStorage
-                    localStorage.setItem('shipinsure_merchantLogo', e.target.result);
-                    
-                    // Auto-update shareable link if it's currently displayed
-                    if (document.getElementById('linkDisplay').style.display === 'block') {
-                        generateShareableLink();
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
 
         function formatCurrency(value) {
             return new Intl.NumberFormat('en-US', {
@@ -651,13 +556,6 @@
                 document.getElementById('attachRate').value = urlParams.get('attach') || '60';
                 document.getElementById('protectionPremium').value = urlParams.get('premium') || '3.00';
                 document.getElementById('timeframe').value = urlParams.get('view') || 'monthly';
-                
-                // Load merchant logo from localStorage (not from URL)
-                const savedLogo = localStorage.getItem('shipinsure_merchantLogo');
-                if (savedLogo) {
-                    const logoDisplay = document.getElementById('logoDisplay');
-                    logoDisplay.innerHTML = `<img src="${savedLogo}" alt="Merchant Logo">`;
-                }
             } else {
                 // Load from localStorage if no URL params
                 const savedValues = {
@@ -669,8 +567,7 @@
                     revenueShare: localStorage.getItem('shipinsure_revenueShare') || '30',
                     attachRate: localStorage.getItem('shipinsure_attachRate') || '60',
                     protectionPremium: localStorage.getItem('shipinsure_protectionPremium') || '3.00',
-                    timeframe: localStorage.getItem('shipinsure_timeframe') || 'monthly',
-                    merchantLogo: localStorage.getItem('shipinsure_merchantLogo')
+                    timeframe: localStorage.getItem('shipinsure_timeframe') || 'monthly'
                 };
 
                 // Set values if they exist
@@ -683,12 +580,6 @@
                 document.getElementById('attachRate').value = savedValues.attachRate;
                 document.getElementById('protectionPremium').value = savedValues.protectionPremium;
                 document.getElementById('timeframe').value = savedValues.timeframe;
-                
-                // Load merchant logo
-                if (savedValues.merchantLogo) {
-                    const logoDisplay = document.getElementById('logoDisplay');
-                    logoDisplay.innerHTML = `<img src="${savedValues.merchantLogo}" alt="Merchant Logo">`;
-                }
             }
         }
 
@@ -746,9 +637,6 @@
             
             input.addEventListener('input', calculate);
         });
-
-        // Add event listener to logo upload
-        document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
 
         // Add event listener to timeframe dropdown
         document.getElementById('timeframe').addEventListener('change', function() {
